@@ -1,0 +1,42 @@
+
+
+import { PaymentDriver } from "../interface/payment-driver.interface";
+import { 
+    IPaymentInitializeArg,
+    IPaymentInitializeResult,
+    IPaymentVerifyResult
+} from "../interface/payment.interface";
+
+export class FlutterwaveDriver extends PaymentDriver {
+
+    name = 'Flutterwave';
+    
+    async initialize(data: IPaymentInitializeArg) {
+
+        const result: IPaymentInitializeResult = {
+            url: 'http://paystack.com',
+            accessCode: 'code',
+            reference: 'refno'
+        }
+
+        return result;
+    }
+
+    async verify(reference: string) {
+
+        const result: IPaymentVerifyResult = {
+            currency: 'NGN',
+            amount: 500,
+            status: 'failed',
+            date: '01/11/2020'
+        }
+
+        return result;
+    }
+
+    async refund(reference: string, amount: number, reason: string) {
+        return {
+            status: false
+        }
+    }
+}
