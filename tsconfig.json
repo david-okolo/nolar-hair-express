@@ -7,9 +7,8 @@
       "allowSyntheticDefaultImports": true,
       "target": "es2017",
       "noImplicitAny": true,
-      "moduleResolution": "node",
       "sourceMap": true,
-      "outDir": "dist",
+      "outDir": "./dist",
       "baseUrl": ".",
       "paths": {
           "*": [
@@ -23,6 +22,7 @@
   ],
   "exclude": [
       "node_modules",
-      "src/**/*.spec.ts"
+      "src/**/*.spec.ts",
+      "dist"
   ]
 }
