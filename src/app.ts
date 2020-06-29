@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+import 'reflect-metadata';
+
 import express from 'express';
 import { resolve } from 'path';
 import cors from 'cors';
@@ -44,4 +49,4 @@ app.get('/*', (req, res) => {
   res.sendFile(resolve('public', 'index.html'))
 })
 
-export default app;
+app.listen(process.env.PORT);
