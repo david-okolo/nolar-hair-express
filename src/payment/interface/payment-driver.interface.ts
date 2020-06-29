@@ -1,5 +1,4 @@
 import { IPaymentInitializeArg, IPaymentInitializeResult, IPaymentVerifyResult } from "./payment.interface";
-import { Observable } from 'rxjs';
 
 export abstract class PaymentDriver {
     name: string
