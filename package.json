@@ -8,6 +8,7 @@
     "start:dev": "ts-node src/app.ts",
     "build": "tsc",
     "setEnv": "cp .env.example .env",
+    "cpanel:set": "cp -R ./dist/. ${PWD}",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
