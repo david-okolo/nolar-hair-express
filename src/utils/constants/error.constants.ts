@@ -1,0 +1,1 @@
+export const DatabaseErrorMessage = 'Error occurred accessing database...try again later';

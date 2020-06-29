@@ -1,7 +1,7 @@
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { logger } from '../utils/logger';
 import { ICheckBookingResult, BookingStatus } from './interface/booking.interface';
-import { WORK_DAY_START_NORMAL, WORK_DAY_END_NORMAL, TIME_SLOT_INTERVAL, WORK_DAY_START_SUNDAY, WORK_DAY_END_SUNDAY } from '../utils/constants';
+import { WORK_DAY_START_NORMAL, WORK_DAY_END_NORMAL, TIME_SLOT_INTERVAL, WORK_DAY_START_SUNDAY, WORK_DAY_END_SUNDAY } from '../utils/constants/time.constants';
 import { initializePayment, verifyPayment } from '../payment/payment.service';
 import { MailOptions } from '../mailer/interface/mailer.interface';
 import { sendMail } from '../mailer/mailer.service';

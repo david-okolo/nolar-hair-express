@@ -19,6 +19,7 @@ export const initialize = async (data: IPaymentInitializeArg) => {
     const init = await paystack.transaction.initialize({
         email: data.email,
         amount: data.amount,
+        ...process.env.NODE_ENV === 'production' && {callback_url: `${process.env.APP_URL}/store/cart/checkout/confirm/${data.reference}`},
         ...data.reference && {reference: data.reference}
     }).catch((e: Error) => {
         logger.error(e.message, e.stack);

@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { createBooking, checkBooking, getTimeSlotsByService, update } from './booking.service';
 import { logger } from '../utils/logger';
-import { DEFAULT_PERIOD } from '../utils/constants';
+import { DEFAULT_PERIOD } from '../utils/constants/time.constants';
+import passport from 'passport';
 
 const router = Router();
 
@@ -107,7 +108,7 @@ router.post('/getTimeSlots', async (req, res) => {
 })
 
 
-router.post('/edit', async (req, res) => {
+router.post('/edit', passport.authenticate('jwt', {session: false}), async (req, res) => {
 
   const { body } = req;
 

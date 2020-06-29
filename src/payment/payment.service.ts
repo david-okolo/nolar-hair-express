@@ -72,9 +72,6 @@ export const refundPayment = async (reference: string, amount: number, reason: s
         where: {
             reference
         }
-    }).catch(e => {
-        logger.error(e)
-        throw e;
     })
 
     if(payment && payment.refundInit === false) {

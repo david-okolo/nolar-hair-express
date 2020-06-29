@@ -1,0 +1,1 @@
+export const NAIRA_TO_KOBO = 100;
