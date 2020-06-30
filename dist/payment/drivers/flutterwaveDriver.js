@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FlutterwaveDriver = void 0;
 const payment_driver_interface_1 = require("../interface/payment-driver.interface");
 class FlutterwaveDriver extends payment_driver_interface_1.PaymentDriver {
     constructor() {

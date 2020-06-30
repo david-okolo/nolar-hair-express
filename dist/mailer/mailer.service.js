@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendMail = exports.createMailable = void 0;
 const nodemailer_1 = require("nodemailer");
 const jsdom_1 = require("jsdom");
 const view_service_1 = require("../view/view.service");

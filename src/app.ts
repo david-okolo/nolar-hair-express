@@ -14,6 +14,14 @@ import routes from './route';
 import { logger } from './utils/logger';
 import { buildViews } from './view/view.service';
 import { jwtStrategy } from './auth/strategy/jwt.strategy';
+import { Booking } from './entities/booking.entity';
+import { CartItem } from './entities/cartItem.entity';
+import { Payment } from './entities/payment.entity';
+import { Product } from './entities/product.entity';
+import { Service } from './entities/service.entity';
+import { StoreCategory } from './entities/storeCategory.entity';
+import { StoreTransaction } from './entities/storeTransaction.entity';
+import { User } from './entities/user.entity';
 
 // library initializatio
 buildViews();
@@ -22,7 +30,16 @@ AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   region: process.env.AWS_REGION
 })
-createConnection().then((connection: Connection) => {
+createConnection({
+  type: 'mysql',
+  host: 'localhost',
+  username: process.env.NODE_ENV === 'production' ? 'nolarhai_dev' : 'root',
+  password: process.env.NODE_ENV === 'production' ? 'neVerland94@' : '',
+  database: process.env.NODE_ENV === 'production' ? 'nolarhai_development' : 'nolar_dev',
+  port: 3306,
+  synchronize: true,
+  entities: [Booking, CartItem, Payment, Product, Service, StoreCategory, StoreTransaction, User]
+}).then((connection: Connection) => {
   logger.info('MYSQL connected')
 });
 

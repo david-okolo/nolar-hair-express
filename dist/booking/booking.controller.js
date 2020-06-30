@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BookingRouter = void 0;
 const express_1 = require("express");
 const booking_service_1 = require("./booking.service");
 const logger_1 = require("../utils/logger");
