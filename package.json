@@ -23,6 +23,7 @@
     "@types/passport": "^1.0.3",
     "@types/passport-jwt": "^3.0.3",
     "@types/paystack": "^2.0.0",
+    "@types/uuid": "^8.0.0",
     "jest": "^26.1.0",
     "jsdom": "^16.2.2",
     "nodemailer": "^6.4.10",
@@ -47,6 +48,7 @@
     "paystack": "^2.0.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.25",
+    "uuid": "^3.4.0",
     "winston": "^3.3.2",
     "winston-daily-rotate-file": "^4.5.0"
   }

@@ -39,8 +39,8 @@ router.post('/pay', async (req, res) => {
   const { body } = req;
 
   const result = await storeService.buyProducts(body).catch(e => {
+    console.log(e)
     res.sendStatus(500)
-    return;
   })
 
   if (result) {
@@ -51,10 +51,6 @@ router.post('/pay', async (req, res) => {
     });
     return;
   }
-
-  res.json({
-    success: false
-  })
 })
 
 router.post('/addProduct', upload.single('productImage'), async (req, res) => {

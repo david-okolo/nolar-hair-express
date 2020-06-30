@@ -1,6 +1,7 @@
 import { initializePayment, verifyPayment, refundPayment } from '../payment/payment.service';
 import { Product } from '../entities/product.entity';
 import { getRepository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { StoreCategory } from '../entities/storeCategory.entity';
 import { CartItem } from '../entities/cartItem.entity';
 import { StoreTransaction } from '../entities/storeTransaction.entity';
@@ -56,7 +57,8 @@ import { DatabaseErrorMessage } from '../utils/constants/error.constants';
         // initialize transaction
         const payment = await initializePayment({
             email: data.email,
-            amount: totalPrice * NAIRA_TO_KOBO
+            amount: totalPrice * NAIRA_TO_KOBO,
+            reference: uuidv4()
         }).catch(e => {
             throw e;
         })
