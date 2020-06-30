@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.5c2ed8c5.chunk.css",
-    "main.js": "/static/js/main.0cddb1df.chunk.js",
-    "main.js.map": "/static/js/main.0cddb1df.chunk.js.map",
+    "main.css": "/static/css/main.967b43df.chunk.css",
+    "main.js": "/static/js/main.9ebab11b.chunk.js",
+    "main.js.map": "/static/js/main.9ebab11b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.3738857c.js",
     "runtime-main.js.map": "/static/js/runtime-main.3738857c.js.map",
     "static/css/2.af3c1da9.chunk.css": "/static/css/2.af3c1da9.chunk.css",
-    "static/js/2.4560663a.chunk.js": "/static/js/2.4560663a.chunk.js",
-    "static/js/2.4560663a.chunk.js.map": "/static/js/2.4560663a.chunk.js.map",
+    "static/js/2.1da075fb.chunk.js": "/static/js/2.1da075fb.chunk.js",
+    "static/js/2.1da075fb.chunk.js.map": "/static/js/2.1da075fb.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.759f7236245b8ea6436be585d967a639.js": "/precache-manifest.759f7236245b8ea6436be585d967a639.js",
+    "precache-manifest.ca70eed0f269ceb30cbaea326989aa30.js": "/precache-manifest.ca70eed0f269ceb30cbaea326989aa30.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.af3c1da9.chunk.css.map": "/static/css/2.af3c1da9.chunk.css.map",
-    "static/css/main.5c2ed8c5.chunk.css.map": "/static/css/main.5c2ed8c5.chunk.css.map",
-    "static/js/2.4560663a.chunk.js.LICENSE.txt": "/static/js/2.4560663a.chunk.js.LICENSE.txt",
+    "static/css/main.967b43df.chunk.css.map": "/static/css/main.967b43df.chunk.css.map",
+    "static/js/2.1da075fb.chunk.js.LICENSE.txt": "/static/js/2.1da075fb.chunk.js.LICENSE.txt",
     "static/media/HKGrotesk-Bold.ttf": "/static/media/HKGrotesk-Bold.43ead254.ttf",
     "static/media/HKGrotesk-Regular.ttf": "/static/media/HKGrotesk-Regular.10774ee6.ttf",
     "static/media/barbing.jpg": "/static/media/barbing.c20e100d.jpg",
@@ -21,6 +21,9 @@
     "static/media/bg-1.jpg": "/static/media/bg-1.ba9c50eb.jpg",
     "static/media/bg-2.jpg": "/static/media/bg-2.cdaa7004.jpg",
     "static/media/consultation.jpg": "/static/media/consultation.1c63b335.jpg",
+    "static/media/loss.jpg": "/static/media/loss.6bbae9bd.jpg",
+    "static/media/me.jpg": "/static/media/me.9ab6b918.jpg",
+    "static/media/product.jpg": "/static/media/product.43b29fc1.jpg",
     "static/media/store-1.jpg": "/static/media/store-1.a35915e5.jpg",
     "static/media/store-2.jpg": "/static/media/store-2.b9e11925.jpg",
     "static/media/store-3.jpg": "/static/media/store-3.fd34bf27.jpg",
@@ -34,8 +37,8 @@
   "entrypoints": [
     "static/js/runtime-main.3738857c.js",
     "static/css/2.af3c1da9.chunk.css",
-    "static/js/2.4560663a.chunk.js",
-    "static/css/main.5c2ed8c5.chunk.css",
-    "static/js/main.0cddb1df.chunk.js"
+    "static/js/2.1da075fb.chunk.js",
+    "static/css/main.967b43df.chunk.css",
+    "static/js/main.9ebab11b.chunk.js"
   ]
 }
