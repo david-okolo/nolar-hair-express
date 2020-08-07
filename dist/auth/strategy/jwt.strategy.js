@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.jwtStrategy = void 0;
 const passport_jwt_1 = require("passport-jwt");
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../../entities/user.entity");

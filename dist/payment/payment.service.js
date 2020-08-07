@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refundPayment = exports.verifyPayment = exports.initializePayment = void 0;
 const paystackDriver_1 = require("./drivers/paystackDriver");
 const payment_entity_1 = require("../entities/payment.entity");
 const typeorm_1 = require("typeorm");
 exports.initializePayment = async (data) => {
+    var _a;
     const initResult = await paystackDriver_1.initialize(data).catch(e => {
         throw e;
     });
@@ -12,7 +12,7 @@ exports.initializePayment = async (data) => {
     if (initResult) {
         payment = await typeorm_1.getRepository(payment_entity_1.Payment).save({
             authorizationUrl: initResult.url,
-            booking: data === null || data === void 0 ? void 0 : data.booking,
+            booking: (_a = data) === null || _a === void 0 ? void 0 : _a.booking,
             reference: initResult.reference,
             amount: data.amount
         }).catch(e => {

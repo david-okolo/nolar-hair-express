@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomServerResponse = exports.InternalResponse = void 0;
 class InternalResponse {
     constructor(status, data, errors) {
         this.status = status;

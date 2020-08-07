@@ -1,7 +1,6 @@
 export class CreateBookingDto {
-    name: string
-    email: string
-    requestedService: string
-    requestedAppointmentTime: number
-    paidRequest: boolean
+  name: string;
+  email: string;
+  requestedAppointmentTime: number;
+  paidRequest: boolean;
 }
