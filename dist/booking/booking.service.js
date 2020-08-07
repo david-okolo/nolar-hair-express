@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.update = exports.getTimeSlotsByService = exports.timeSlotsAreValid = exports.checkBooking = exports.createBooking = void 0;
 const logger_1 = require("../utils/logger");
 const booking_interface_1 = require("./interface/booking.interface");
 const time_constants_1 = require("../utils/constants/time.constants");
@@ -26,26 +27,30 @@ exports.createBooking = async (data) => {
         paymentInitialized: false,
         paymentUrl: null,
         reference: null,
-        errors: []
+        errors: [],
     };
-    const validity = await exports.timeSlotsAreValid([data.requestedAppointmentTime], data.requestedService).catch(e => {
+    const validity = await exports.timeSlotsAreValid([data.requestedAppointmentTime], "consultation").catch((e) => {
         throw e;
     });
     let booking;
     if (validity.status) {
-        booking = await typeorm_1.getRepository(booking_entity_1.Booking).save({
+        result.created = true;
+        booking = await typeorm_1.getRepository(booking_entity_1.Booking)
+            .save({
             name: data.name,
             email: data.email,
             requestedAppointmentTime: data.requestedAppointmentTime,
-            service: data.requestedService,
-            paidRequest: data.paidRequest
-        }).catch(e => {
-            result.errors.push('Error saving booking to database');
+            service: "consultation",
+            paidRequest: data.paidRequest,
+        })
+            .catch((e) => {
+            result.created = false;
+            result.errors.push("Error saving booking to database");
             logger_1.logger.error(`Booking creation for 'email: ${data.email}' error - ${e.message}`, e.stack);
         });
     }
     else {
-        result.errors.push('Time slot has been taken');
+        result.errors.push("Time slot has been taken");
         return result;
     }
     if (booking && data.paidRequest) {
@@ -56,31 +61,55 @@ exports.createBooking = async (data) => {
             email: data.email,
             amount: Number(process.env.BOOKING_PRICE_IN_KOBO),
             booking: booking,
-            reference: booking.reference
-        }).catch(e => {
-            result.errors.push(`Error initializing payment using '${'PAYSTACK'}'`);
+            reference: booking.reference,
+        }).catch((e) => {
+            result.errors.push(`Error initializing payment using '${"PAYSTACK"}'`);
             result.paymentInitialized = false;
             logger_1.logger.error(`Booking creation for 'email: ${data.email}' error - ${e.message}`, e.stack);
         });
         const end = process.hrtime(start);
-        logger_1.logger.info(`Paystack API took ${((end[0] * 1e9) + end[1]) / 1e9} seconds to return data`);
+        logger_1.logger.info(`Paystack API took ${(end[0] * 1e9 + end[1]) / 1e9} seconds to return data`);
         result.paymentUrl = payment ? payment.url : null;
         result.reference = payment ? payment.reference : null;
     }
     if (booking && result.created) {
         const message = {
             to: data.email,
-            subject: 'Booking Request',
-            viewName: 'bookingRequested',
+            subject: "Booking Request",
+            viewName: "bookingRequested",
             input: {
                 recipientName: data.name,
-                serviceRequested: data.requestedService,
-                reference: booking.reference
-            }
+                serviceRequested: "consultation",
+                reference: booking.reference,
+                paymentString: result.paymentUrl
+                    ? "Here is your payment link " + result.paymentUrl
+                    : "",
+            },
         };
-        mailer_service_1.sendMail(message).then((response) => {
+        mailer_service_1.sendMail(message)
+            .then((response) => {
             logger_1.logger.info(`[Mail] response`, JSON.stringify(response));
-        }).catch(e => {
+        })
+            .catch((e) => {
+            logger_1.logger.error(`[Mail] sending to ${data.email} failed`, e.stack);
+        });
+        const adminMessage = {
+            to: "booking@nolarhair.com.ng",
+            subject: "Consultation Requested",
+            viewName: "bookingRequested",
+            input: {
+                userName: data.name,
+                userEmail: data.email,
+                appointmentTime: new Date(data.requestedAppointmentTime).toString(),
+                serviceRequested: "consultation",
+                reference: booking.reference,
+            },
+        };
+        mailer_service_1.sendMail(adminMessage)
+            .then((response) => {
+            logger_1.logger.info(`[Mail] response`, JSON.stringify(response));
+        })
+            .catch((e) => {
             logger_1.logger.error(`[Mail] sending to ${data.email} failed`, e.stack);
         });
     }
@@ -89,31 +118,34 @@ exports.createBooking = async (data) => {
 };
 exports.checkBooking = async (reference) => {
     const result = {
-        email: '',
+        email: "",
         paidRequest: false,
         paymentStatus: false,
-        timeSlot: '',
-        service: '',
+        timeSlot: "",
+        service: "",
         status: booking_interface_1.BookingStatus.failed,
-        errors: []
+        errors: [],
     };
     await payment_service_1.verifyPayment(reference);
     // check database for booking by reference
-    const booking = await typeorm_1.getRepository(booking_entity_1.Booking).findOne({
-        reference: reference
+    const booking = await typeorm_1.getRepository(booking_entity_1.Booking)
+        .findOne({
+        reference: reference,
     }, {
-        relations: ['payment']
-    }).catch(e => {
+        relations: ["payment"],
+    })
+        .catch((e) => {
         logger_1.logger.error(e.message, e.stack);
     });
     if (!booking) {
-        result.errors.push('Booking does not exist');
+        result.errors.push("Booking does not exist");
         return result;
     }
     // if entity has a paid value of true, check the payment table for the status of the transaction
     let date = Number(booking.requestedAppointmentTime);
     result.status = booking_interface_1.BookingStatus.pending;
-    if (booking.approvedAppointmentTime) { // if the approved appointment time is set then the booking request has been approved by owner
+    if (booking.approvedAppointmentTime) {
+        // if the approved appointment time is set then the booking request has been approved by owner
         date = Number(booking.approvedAppointmentTime);
         result.status = booking_interface_1.BookingStatus.success;
     }
@@ -124,7 +156,7 @@ exports.checkBooking = async (reference) => {
         result.paidRequest = true;
         if (!booking.payment.verified || !booking.payment.success) {
             // if the transaction has not been verified or status is false, make a call to paystack to check
-            const paymentVerified = await payment_service_1.verifyPayment(booking.reference).catch(e => {
+            const paymentVerified = await payment_service_1.verifyPayment(booking.reference).catch((e) => {
                 throw e;
             });
             if (paymentVerified) {
@@ -139,31 +171,38 @@ exports.checkBooking = async (reference) => {
 };
 exports.timeSlotsAreValid = async (timestamps, serviceName) => {
     // no paid or approved booking for the same service must have been made in that timeslot
-    const result = await typeorm_1.getRepository(booking_entity_1.Booking).find({
-        where: timestamps.map(timestamp => {
+    const result = await typeorm_1.getRepository(booking_entity_1.Booking)
+        .find({
+        where: timestamps.map((timestamp) => {
             return {
                 requestedAppointmentTime: timestamp,
-                service: serviceName
+                service: serviceName,
             };
         }),
-        relations: ['payment']
-    }).catch(e => {
+        relations: ["payment"],
+    })
+        .catch((e) => {
         throw e;
     });
     return {
-        status: result.length === 0,
-        data: new Set(result.map(booking => {
-            if (booking.payment && (booking.payment.success && booking.payment.verified)) {
-                return Number(booking.approvedAppointmentTime ? booking.approvedAppointmentTime : booking.requestedAppointmentTime);
+        status: result.length === 0 ||
+            !result.find((item) => { var _a, _b; return item.payment && ((_a = item.payment) === null || _a === void 0 ? void 0 : _a.success) && ((_b = item.payment) === null || _b === void 0 ? void 0 : _b.verified); }),
+        data: new Set(result.map((booking) => {
+            if (booking.payment &&
+                booking.payment.success &&
+                booking.payment.verified) {
+                return Number(booking.approvedAppointmentTime
+                    ? booking.approvedAppointmentTime
+                    : booking.requestedAppointmentTime);
             }
             return 0;
-        }))
+        })),
     };
 };
 /**
-* Returns time slots for a given period
-* @param { number } period - number of days
-*/
+ * Returns time slots for a given period
+ * @param { number } period - number of days
+ */
 exports.getTimeSlotsByService = async (period, serviceName) => {
     // build object with keys as day timestamp (convert to date) and value as an array of tomestamps for start of slots
     const result = {};
@@ -174,7 +213,8 @@ exports.getTimeSlotsByService = async (period, serviceName) => {
         today.setUTCDate(dayOfTheMonth + (i === 0 ? 0 : 1));
         today.setUTCHours(0, 0, 0, 0);
         const todayTimestamp = today.getTime();
-        if (today.getDay() > 0) { // 6 is the day code for sunday
+        if (today.getDay() > 0) {
+            // 6 is the day code for sunday
             for (let j = time_constants_1.WORK_DAY_START_NORMAL; j < time_constants_1.WORK_DAY_END_NORMAL; j = j + time_constants_1.TIME_SLOT_INTERVAL) {
                 today.setUTCHours(j, 0, 0, 0);
                 if (today.getTime() > Date.now()) {
@@ -192,13 +232,18 @@ exports.getTimeSlotsByService = async (period, serviceName) => {
         }
         result[todayTimestamp] = timeSlots;
     }
-    const allTimeSlots = Object.values(result).reduce((acc, curr) => { return [...acc, ...curr]; }, []);
-    const validity = await exports.timeSlotsAreValid(allTimeSlots, serviceName).catch(e => {
+    const allTimeSlots = Object.values(result).reduce((acc, curr) => {
+        return [...acc, ...curr];
+    }, []);
+    console.log(serviceName);
+    const validity = await exports.timeSlotsAreValid(allTimeSlots, serviceName).catch((e) => {
+        console.log(e);
         throw e;
     });
+    console.log(validity);
     if (!validity.status) {
         Object.entries(result).forEach(([key, value]) => {
-            result[key] = value.filter(timeSlot => {
+            result[key] = value.filter((timeSlot) => {
                 return !validity.data.has(timeSlot);
             });
         });
@@ -208,26 +253,32 @@ exports.getTimeSlotsByService = async (period, serviceName) => {
 // vulnerable
 exports.update = async (data) => {
     const { id } = data, update = __rest(data, ["id"]);
-    await typeorm_1.getRepository(booking_entity_1.Booking).update(id, update).catch(e => {
+    await typeorm_1.getRepository(booking_entity_1.Booking)
+        .update(id, update)
+        .catch((e) => {
         logger_1.logger.error(`Updating booking id ${id}`, e.stack);
-        throw new Error('Booking failed to update');
+        throw new Error("Booking failed to update");
     });
-    const booking = await typeorm_1.getRepository(booking_entity_1.Booking).findOne(id).catch(e => {
+    const booking = await typeorm_1.getRepository(booking_entity_1.Booking)
+        .findOne(id)
+        .catch((e) => {
         logger_1.logger.error(`Updating booking id ${id}`);
     });
     if (booking) {
         const mail = {
             to: booking.email,
-            subject: 'Booking Update',
-            viewName: 'bookingUpdated',
+            subject: "Booking Update",
+            viewName: "bookingUpdated",
             input: {
                 recipientName: booking.name,
-                reference: booking.reference
-            }
+                reference: booking.reference,
+            },
         };
-        mailer_service_1.sendMail(mail).then((response) => {
+        mailer_service_1.sendMail(mail)
+            .then((response) => {
             logger_1.logger.info(`[Mail] response`, JSON.stringify(response));
-        }).catch(e => {
+        })
+            .catch((e) => {
             console.log(e);
             logger_1.logger.error(`[Mail] sending to ${booking.email} failed`, e.stack);
         });

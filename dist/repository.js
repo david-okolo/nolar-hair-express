@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.paymentRepository = exports.bookingRepository = void 0;
 const typeorm_1 = require("typeorm");
 const booking_entity_1 = require("./entities/booking.entity");
 const payment_entity_1 = require("./entities/payment.entity");
