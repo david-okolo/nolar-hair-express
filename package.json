@@ -18,7 +18,7 @@
     "@types/paystack": "^2.0.0",
     "jest": "^26.1.0",
     "jsdom": "^16.2.2",
-    "nodemailer": "^6.4.10",
+    "nodemailer": "^6.4.16",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   },
